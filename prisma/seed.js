@@ -4,7 +4,8 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-  for (const rolename of ["ADMIN", "CUSTOMER"]) {
+  // Tạo các vai trò mặc định nếu chưa tồn tại
+  for (const rolename of ["ADMIN", "CUSTOMER", "normal"]) {
     const existing = await prisma.role.findFirst({
       where: { rolename },
     });
@@ -16,6 +17,7 @@ async function main() {
     }
   }
 
+  // Tạo membership BASIC cho dữ liệu cũ
   const basic = await prisma.memberShip.findFirst({
     where: { mname: "BASIC" },
   });
@@ -26,6 +28,25 @@ async function main() {
         mname: "BASIC",
         score: 0,
       },
+    });
+  }
+
+  // Tạo membership NORMAL với score = 10
+  const normal = await prisma.memberShip.findFirst({
+    where: { mname: "NORMAL" },
+  });
+
+  if (!normal) {
+    await prisma.memberShip.create({
+      data: {
+        mname: "NORMAL",
+        score: 10,
+      },
+    });
+  } else if (normal.score !== 10) {
+    await prisma.memberShip.update({
+      where: { mid: normal.mid },
+      data: { score: 10 },
     });
   }
 

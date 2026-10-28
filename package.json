@@ -1,13 +1,24 @@
 {
   "name": "ecommerce-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Monolithic Ecommerce RESTful API using Node.js, Express, Prisma and PostgreSQL",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "node prisma/seed.js",
+    "db:admin": "node prisma/create-admin.js",
+    "test": "node --check server.js"
   },
-  "keywords": [],
+  "keywords": [
+    "ecommerce",
+    "monolithic",
+    "rest-api",
+    "prisma",
+    "postgresql"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",

@@ -118,11 +118,11 @@ app.post("/auth/register", async (req, res) => {
 
   try {
     const role = await prisma.role.findFirst({
-      where: { rolename: "CUSTOMER" },
+      where: { rolename: "normal" },
     });
 
     const membership = await prisma.memberShip.findFirst({
-      where: { mname: "BASIC" },
+      where: { mname: "NORMAL", score: 10 },
     });
 
     if (!role || !membership) {
@@ -149,7 +149,10 @@ app.post("/auth/register", async (req, res) => {
           select: { rolename: true },
         },
         membership: {
-          select: { mname: true },
+          select: {
+            mname: true,
+            score: true,
+          },
         },
       },
     });
@@ -476,12 +479,23 @@ app.post("/orders", authenticate, async (req, res) => {
           data: {
             // Lấy khách hàng từ JWT đã xác thực.
             uid: req.user.uid,
+
+            // Tạo chi tiết đơn hàng.
             orderDetails: {
               create: details,
             },
+
+            // Tự động tạo Shipment khi đặt hàng.
+            shipments: {
+              create: {
+                status: "PENDING",
+              },
+            },
           },
+
           include: {
             orderDetails: true,
+            shipments: true,
           },
         });
       },

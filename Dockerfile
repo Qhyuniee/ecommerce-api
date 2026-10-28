@@ -16,4 +16,4 @@ COPY . .
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "npx prisma migrate deploy && exec node server.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run db:seed && exec node server.js"]
